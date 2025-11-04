@@ -1,160 +1,71 @@
-🏢 ImobConvex
-<div align="center">
-Mostrar Imagem
-Sistema Imobiliário Inteligente de Nova Geração
-Mostrar Imagem
-Mostrar Imagem
-Mostrar Imagem
-Mostrar Imagem
-🌐 Demo • 📖 Documentação • 🐛 Report Bug • ✨ Request Feature
-</div>
+# ImobConvex
 
-📋 Índice
+Plataforma imobiliária inteligente que combina portal público, painel administrativo e API com qualificação automatizada de leads. Este repositório contém um MVP funcional construído em FastAPI (backend) e Next.js (frontend).
 
-Sobre o Projeto
-Principais Funcionalidades
-Tecnologias
-Começando
+> 📚 Documentação detalhada de arquitetura e visão de produto: [`docs/solution_blueprint.md`](docs/solution_blueprint.md)
+> 🗺️ Relatório de status para implantação: [`docs/status_implantacao.md`](docs/status_implantacao.md)
 
-Pré-requisitos
-Instalação
-Configuração
+## Estrutura do repositório
 
+- `backend/` — API em FastAPI + SQLModel com autenticação JWT e serviços de scoring determinístico.
+- `frontend/` — Portal Next.js com captura de leads e painel administrativo básico.
+- `docs/` — Documentação técnica (blueprint completo + relatório de status).
 
-Uso
-Arquitetura
-Módulos
-API
-Deploy
-Roadmap
-Contribuindo
-Licença
-Contato
+## Como executar localmente
 
+### Backend (FastAPI)
 
-🎯 Sobre o Projeto
-ImobConvex é uma plataforma imobiliária completa que revoluciona a gestão de imóveis, corretores e clientes através de Inteligência Artificial, automação inteligente e design premium.
-💡 Problema que Resolve
+```bash
+cd backend
+python -m venv .venv
+source .venv/bin/activate
+pip install -e .
+cp .env.example .env
+uvicorn app.main:app --reload
+```
 
-❌ Sistemas imobiliários complexos e difíceis de usar
-❌ Falta de automação em processos repetitivos
-❌ Qualificação manual de leads (perda de tempo)
-❌ Gestão financeira descentralizada e confusa
-❌ Baixa conversão por falta de follow-up estratégico
-❌ Marketing sem dados e análises concretas
+A API ficará disponível em `http://localhost:8000` com documentação em `http://localhost:8000/api/v1/docs`.
 
-✅ Nossa Solução
+### Frontend (Next.js)
 
-✅ Interface intuitiva que corretores dominam em 15 minutos
-✅ IA que qualifica leads automaticamente com 95% de precisão
-✅ Automação completa de follow-ups e campanhas
-✅ Gestão financeira centralizada com relatórios em tempo real
-✅ CRM inteligente que aumenta conversão em 40%
-✅ Marketing data-driven com ROI mensurável
+```bash
+cd frontend
+npm install           # ou yarn/pnpm se preferir
+cp .env.example .env.local
+npm run dev
+```
 
+O portal será servido em `http://localhost:3000` e já consome a API configurada no backend.
 
-🚀 Principais Funcionalidades
-🏠 Portal de Imóveis
+## Estado atual do MVP
 
-Busca inteligente com filtros avançados
-Tour virtual 360° e galeria HD
-Comparador de imóveis (até 4 simultâneos)
-Calculadora de financiamento integrada
-Chat ao vivo com IA de qualificação
-SEO otimizado para ranqueamento orgânico
+| Área | Status | O que já funciona | Lacunas principais |
+| --- | --- | --- | --- |
+| Portal público | ✅ | Listagem de imóveis com filtros básicos, página detalhada, formulário inteligente de leads | Falta mapa interativo, favoritos, comparador, SEO avançado, tour 360° |
+| Painel administrativo | 🟡 | Login com JWT, cadastro/remoção de imóveis, lista de leads com score sugerido | Não há edição completa, atribuição de corretores, automações, múltiplos perfis |
+| API/Backend | 🟡 | Autenticação, CRUD de imóveis, captura e enriquecimento determinístico de leads, seed de superusuário | Ausência de testes automatizados, notificações externas, integração com IA real, auditoria |
+| IA/Automação | 🔸 | Score baseado em regras e recomendações simples | Não há modelos treinados, integrações com OpenAI/N8N, previsão real de conversão |
+| Operações/Infra | 🔸 | Configuração manual via `.env`, criação automática das tabelas SQLite/Postgres | Falta Docker, CI/CD, monitoramento, scripts de migração e rollback |
 
-🤖 CRM com Inteligência Artificial
+Legenda: ✅ pronto · 🟡 utilizável porém incompleto · 🔸 rascunho/protótipo
 
-Scoring automático de leads (0-100 pontos)
-Análise preditiva de poder de compra
-Classificação automática: Quente, Morno, Frio
-Follow-up inteligente com sugestão de melhor momento
-Detecção de sentimento em conversas
-Recomendação personalizada de imóveis
+## Checklist para implantação inicial
 
-💼 Gestão Completa
+1. **Banco de dados** — Ajustar `DATABASE_URL` no backend para apontar para o PostgreSQL definitivo e executar a aplicação uma vez para criar as tabelas via SQLModel.
+2. **Usuário administrador** — Definir `FIRST_SUPERUSER_EMAIL`/`FIRST_SUPERUSER_PASSWORD` no `.env` do backend; o seed automático cria o superusuário na primeira inicialização.
+3. **Origem CORS** — Atualizar `CORS_ORIGINS` para incluir o domínio oficial do portal.
+4. **Frontend** — Definir `NEXT_PUBLIC_API_URL` no `.env.local` do frontend apontando para a API publicada.
+5. **Segurança** — Trocar `SECRET_KEY`, configurar HTTPS no ambiente de produção e habilitar logs/monitoramento.
+6. **Infra mínima** — Provisionar storage de imagens (S3/Cloudinary), serviço de e-mail e provedor de mensagens se forem necessários no go-live.
 
-Cadastro simplificado de imóveis (IA gera descrições)
-Gestão de contratos e aluguéis
-Controle financeiro com DRE automatizado
-Repasse automático para proprietários
-Comissões e divisões calculadas automaticamente
-Dashboard executivo em tempo real
+## Próximos passos recomendados
 
-📊 Marketing Inteligente
+- Implementar edição completa de imóveis e leads no painel administrativo (incluir uploads, galerias e atribuição a corretores).
+- Evoluir o serviço de IA para usar modelos hospedados (OpenAI ou modelo proprietário) e registrar histórico de scoring.
+- Construir módulos financeiros e de marketing previstos no blueprint (contratos, repasses, campanhas, analytics).
+- Adicionar testes automatizados (unitários e e2e) e pipeline CI/CD.
+- Criar camada de integração com WordPress/JetEngine para migração gradual conforme descrito na documentação.
 
-Criador de campanhas Facebook/Instagram Ads
-Google Ads com rastreamento de conversões
-Google Meu Negócio (posts automáticos)
-Landing pages personalizadas
-A/B testing automatizado
-ROI detalhado por campanha
+---
 
-📱 Mobile First
-
-App nativo iOS e Android
-PWA com funcionamento offline
-Check-in em visitas com geolocalização
-Propostas digitais com assinatura eletrônica
-Notificações push inteligentes
-
-
-🛠️ Tecnologias
-Frontend
-
-Framework: Next.js 14 (App Router)
-UI Library: React 18
-Styling: Tailwind CSS + shadcn/ui
-State Management: Zustand + React Query
-Forms: React Hook Form + Zod
-Charts: Recharts + Chart.js
-Maps: Google Maps API
-Real-time: Socket.io Client
-
-Backend
-
-Runtime: Node.js 20 LTS
-Framework: Express.js + TypeScript
-Database: PostgreSQL 16 + Prisma ORM
-Cache: Redis 7
-Queue: Bull (Redis-based)
-Real-time: Socket.io
-Auth: JWT + Passport.js
-
-IA & Machine Learning
-
-LLM: OpenAI GPT-4 API
-Orchestration: Langchain
-Vector DB: Pinecone (embeddings)
-ML Models: TensorFlow.js (scoring)
-NLP: Natural (sentiment analysis)
-
-Automação & Integrações
-
-Workflow: N8N self-hosted
-Email: SendGrid / AWS SES
-SMS: Twilio
-WhatsApp: WhatsApp Business API
-Payments: Stripe + Mercado Pago
-E-signature: Clicksign / D4Sign
-Storage: AWS S3 / CloudFlare R2
-
-DevOps & Infraestrutura
-
-Hosting: Vercel (Frontend) + AWS EC2 (Backend)
-Database: AWS RDS PostgreSQL
-CDN: CloudFlare
-Monitoring: Sentry + DataDog
-CI/CD: GitHub Actions
-Containers: Docker + Docker Compose
-
-
-🏁 Começando
-Pré-requisitos
-Certifique-se de ter instalado:
-
-Node.js >= 20.x (Download)
-PostgreSQL >= 16.x (Download)
-Redis >= 7.x (Download)
-Git (Download)
-Docker (opcional, mas recomendado) (Download)
+Para uma visão aprofundada das integrações e roadmap estratégico consulte o blueprint técnico. O relatório de status aponta as pendências críticas para colocar o sistema em produção com qualidade.
